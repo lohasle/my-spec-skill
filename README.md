@@ -179,4 +179,3 @@ MIT License
 - 初始版本
 - 添加技术文档 HTML 页面设计规范
 - 添加 Tech Doc HTML Generator 技能
-test
