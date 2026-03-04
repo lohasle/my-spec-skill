@@ -108,7 +108,7 @@ my_spec_skill/
 基于本规范和技能构建的实际项目：
 
 - [👹 以太坊白皮书（中文版）](./examples/ethereum-whitepaper-cn.html) - 下一代智能合约和去中心化应用平台
-- [👹 GitHub Pages Demo](https://YOUR_USERNAME.github.io/my_spec_skill/ethereum-whitepaper-cn.html) - 在线预览
+- [🌐 GitHub Pages Demo](https://lohasle.github.io/my-spec-skill/ethereum-whitepaper-cn.html) - 在线预览
 
 ---
 
@@ -116,12 +116,12 @@ my_spec_skill/
 
 本项目通过 GitHub Pages 提供在线演示：
 
-👉 **[查看所有示例](https://YOUR_USERNAME.github.io/my_spec_skill/)**
+👉 **[查看所有示例](https://lohasle.github.io/my-spec-skill/)**
 
 示例列表：
 | 示例 | 描述 | 链接 |
 |------|------|------|
-| 以太坊白皮书 | 中文版技术文档示例 | [查看](https://YOUR_USERNAME.github.io/my_spec_skill/ethereum-whitepaper-cn.html) |
+| 以太坊白皮书 | 中文版技术文档示例 | [查看](https://lohasle.github.io/my-spec-skill/ethereum-whitepaper-cn.html) |
 ---
 
 ## 🔧 自定义
