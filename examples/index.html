@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Spec & Skill - 示例演示</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-coral: #E07A5F;
+            --accent-warm: #D4A574;
+            --bg-primary: #FAF9F7;
+            --bg-secondary: #F5F3F0;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A2E;
+            --text-secondary: #4A4A5A;
+            --text-muted: #8A8A9A;
+            --border-light: #E8E6E3;
+            --gradient-warm: linear-gradient(135deg, #E07A5F 0%, #D4A574 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-warm);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .example-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-warm);
+            box-shadow: 0 12px 32px rgba(212, 165, 116, 0.15);
+        }
+        
+        .example-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(224, 122, 95, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .example-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .example-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .example-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: var(--accent-coral);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">S</div>
+            </div>
+            <h1>My Spec & Skill</h1>
+            <p class="subtitle">规范驱动的前端开发范式 - 技术文档 HTML 页面示例</p>
+        </header>
+        
+        <div class="examples-grid">
+            <a href="./ethereum-whitepaper-cn.html" class="example-card">
+                <div class="example-icon">⟠</div>
+                <h2 class="example-title">以太坊白皮书（中文版）</h2>
+                <p class="example-desc">
+                    下一代智能合约和去中心化应用平台的技术白皮书中文翻译版，
+                    展示完整的技术文档页面设计规范应用。
+                </p>
+                <div class="example-tags">
+                    <span class="tag">区块链</span>
+                    <span class="tag">智能合约</span>
+                    <span class="tag">中文翻译</span>
+                    <span class="tag">技术文档</span>
+                </div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>
+                基于 <a href="https://github.com">GitHub</a> 构建 · 
+                使用 <a href="../specs/tech-doc-html-spec.md">tech-doc-html-spec</a> 规范
+            </p>
+            <p style="margin-top: 0.5rem;">
+                © 2026 My Spec & Skill Project
+            </p>
+        </div>
+    </div>
+</body>
+</html>

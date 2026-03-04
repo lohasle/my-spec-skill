@@ -107,8 +107,21 @@ my_spec_skill/
 
 基于本规范和技能构建的实际项目：
 
-- [CMP 开发指北](../cmp/CMP开发指南.html) - 物联网设备连接管理平台开发指南
+- [👹 以太坊白皮书（中文版）](./examples/ethereum-whitepaper-cn.html) - 下一代智能合约和去中心化应用平台
+- [👹 GitHub Pages Demo](https://YOUR_USERNAME.github.io/my_spec_skill/ethereum-whitepaper-cn.html) - 在线预览
 
+---
+
+## 🚀 在线演示
+
+本项目通过 GitHub Pages 提供在线演示：
+
+👉 **[查看所有示例](https://YOUR_USERNAME.github.io/my_spec_skill/)**
+
+示例列表：
+| 示例 | 描述 | 链接 |
+|------|------|------|
+| 以太坊白皮书 | 中文版技术文档示例 | [查看](https://YOUR_USERNAME.github.io/my_spec_skill/ethereum-whitepaper-cn.html) |
 ---
 
 ## 🔧 自定义
@@ -154,6 +167,12 @@ MIT License
 ---
 
 ## 📅 更新日志
+
+### v1.1.0 (2026-03-04)
+
+- 🌟 新增以太坊白皮书中文版示例
+- 🌐 配置 GitHub Pages 支持
+- 📚 更新 README.md 文档
 
 ### v1.0.0 (2026-03-03)
 
