@@ -107,7 +107,7 @@ my_spec_skill/
 
 基于本规范和技能构建的实际项目：
 
-- [👹 以太坊白皮书（中文版）](./examples/ethereum-whitepaper-cn.html) - 下一代智能合约和去中心化应用平台
+- [⟠ 以太坊白皮书（中文版）](./ethereum-whitepaper-cn.html) - 下一代智能合约和去中心化应用平台
 - [🌐 GitHub Pages Demo](https://lohasle.github.io/my-spec-skill/ethereum-whitepaper-cn.html) - 在线预览
 
 ---

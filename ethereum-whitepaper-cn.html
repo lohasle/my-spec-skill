@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以太坊白皮书 - 下一代智能合约和去中心化应用平台</title>
+    <style>
+        :root {
+            --accent-coral: #E07A5F;
+            --accent-warm: #D4A574;
+            --bg-primary: #FAF9F7;
+            --bg-secondary: #F5F3F0;
+            --text-primary: #1A1A2E;
+            --text-secondary: #6B6B7B;
+            --border-color: #E5E3E0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --header-height: 56px;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-right: 24px;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-coral);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .search-shortcut {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 2px 6px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 900;
+        }
+
+        .sidebar-content {
+            padding: 24px 16px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding: 0 8px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .nav-item.active {
+            background: rgba(224, 122, 95, 0.1);
+            color: var(--accent-coral);
+            font-weight: 500;
+        }
+
+        .nav-item.collapsible {
+            position: relative;
+        }
+
+        .nav-item.collapsible::after {
+            content: '▸';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s;
+        }
+
+        .nav-item.collapsible.expanded::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .nav-subsection {
+            padding-left: 20px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+
+        .nav-subsection.expanded {
+            max-height: 500px;
+        }
+
+        .nav-subsection .nav-item {
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 40px 60px;
+            max-width: 900px;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .content-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Components */
+        .section {
+            margin-bottom: 48px;
+            scroll-margin-top: calc(var(--header-height) + 40px);
+        }
+
+        .section-header {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent-coral);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: var(--accent-coral);
+            border-radius: 2px;
+        }
+
+        .subsection-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 32px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-warm);
+            border-radius: 50%;
+        }
+
+        .paragraph {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .code-section {
+            background: #2D2D2D;
+            color: #f8f8f2;
+            padding: 20px 24px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 24px 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-section code {
+            display: block;
+            white-space: pre;
+        }
+
+        .code-keyword {
+            color: #66D9EF;
+        }
+
+        .code-function {
+            color: #A6E22E;
+        }
+
+        .code-string {
+            color: #E6DB74;
+        }
+
+        .code-comment {
+            color: #75715E;
+            font-style: italic;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(224, 122, 95, 0.08) 0%, rgba(212, 165, 116, 0.08) 100%);
+            border-left: 4px solid var(--accent-coral);
+            padding: 20px 24px;
+            border-radius: 6px;
+            margin: 24px 0;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: var(--accent-coral);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-box-content {
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .data-table thead {
+            background: var(--bg-secondary);
+        }
+
+        .data-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(212, 165, 116, 0.2) 0%, rgba(212, 165, 116, 0.2) 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .list {
+            margin: 16px 0;
+            padding-left: 32px;
+        }
+
+        .list li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 6px;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-coral), var(--accent-warm));
+            z-index: 1001;
+            transition: width 0.1s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 32px 24px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 16px;
+            }
+
+            .content-title {
+                font-size: 28px;
+            }
+
+            .section-header {
+                font-size: 24px;
+            }
+
+            .subsection-title {
+                font-size: 20px;
+            }
+
+            .main-content {
+                padding: 24px 16px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">以太坊白皮书</div>
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="M21 21l-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" placeholder="搜索文档..." id="searchInput">
+            <span class="search-shortcut">⌘K</span>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="nav-section">
+                <div class="nav-section-title">目录</div>
+                <a href="#intro" class="nav-item active">1. 介绍</a>
+                
+                <div class="nav-item collapsible" onclick="toggleSubsection(this)">2. 比特币与现有概念</div>
+                <div class="nav-subsection">
+                    <a href="#history" class="nav-item">2.1 区块链技术历史</a>
+                    <a href="#bitcoin-state" class="nav-item">2.2 状态转换系统</a>
+                    <a href="#mining" class="nav-item">2.3 挖矿</a>
+                    <a href="#merkle" class="nav-item">2.4 默克尔树</a>
+                    <a href="#alt-blockchain" class="nav-item">2.5 替代区块链应用</a>
+                    <a href="#scripting" class="nav-item">2.6 脚本</a>
+                </div>
+
+                <div class="nav-item collapsible" onclick="toggleSubsection(this)">3. 以太坊</div>
+                <div class="nav-subsection">
+                    <a href="#accounts" class="nav-item">3.1 以太坊账户</a>
+                    <a href="#messages" class="nav-item">3.2 消息和交易</a>
+                    <a href="#state-transition" class="nav-item">3.3 状态转换函数</a>
+                    <a href="#code-execution" class="nav-item">3.4 代码执行</a>
+                    <a href="#blockchain-mining" class="nav-item">3.5 区块链和挖矿</a>
+                </div>
+
+                <div class="nav-item collapsible" onclick="toggleSubsection(this)">4. 应用</div>
+                <div class="nav-subsection">
+                    <a href="#tokens" class="nav-item">4.1 代币系统</a>
+                    <a href="#derivatives" class="nav-item">4.2 金融衍生品</a>
+                    <a href="#identity" class="nav-item">4.3 身份和信誉系统</a>
+                    <a href="#storage" class="nav-item">4.4 去中心化文件存储</a>
+                    <a href="#dao" class="nav-item">4.5 去中心化自治组织</a>
+                    <a href="#other-apps" class="nav-item">4.6 其他应用</a>
+                </div>
+
+                <a href="#conclusion" class="nav-item">5. 结论</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="content-title">以太坊白皮书</h1>
+        <p class="content-subtitle">下一代智能合约和去中心化应用平台</p>
+
+        <!-- Section 1: Introduction -->
+        <section class="section" id="intro">
+            <h2 class="section-header">1. 介绍</h2>
+            <p class="paragraph">
+                <span class="highlight">中本聪</span>在2009年开发的比特币，是首个将去中心化货币概念变为现实的项目。比特币不仅创造了一种新的货币形式，更重要的是，它展示了区块链技术的巨大潜力。
+            </p>
+            <p class="paragraph">
+                然而，比特币的设计主要用于货币交易，其脚本语言功能有限。以太坊的目标是建立一个<span class="highlight">通用的区块链平台</span>，支持任意复杂的计算，使开发者能够构建各种去中心化应用。
+            </p>
+            <div class="info-box">
+                <div class="info-box-title">💡 核心创新</div>
+                <div class="info-box-content">
+                    以太坊引入了图灵完备的编程语言，允许开发者编写智能合约，实现任意复杂的逻辑，而不受比特币脚本语言的限制。
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Bitcoin and Existing Concepts -->
+        <section class="section" id="history">
+            <h2 class="section-header">2. 比特币与现有概念</h2>
+            
+            <h3 class="subsection-title" id="blockchain-history">2.1 区块链技术历史</h3>
+            <p class="paragraph">
+                区块链技术是<span class="highlight">去中心化共识</span>的产物。它通过密码学方法和分布式网络，实现了在没有中心化信任机构的情况下，达成全网一致的状态。
+            </p>
+            <p class="paragraph">
+                核心概念包括：
+            </p>
+            <ul class="list">
+                <li><span class="emoji">🔗</span><strong>分布式账本</strong>：所有交易记录存储在网络中的每个节点</li>
+                <li><span class="emoji">🔐</span><strong>密码学哈希</strong>：确保数据完整性和不可篡改性</li>
+                <li><span class="emoji">🤝</span><strong>共识机制</strong>：网络节点就账本状态达成一致</li>
+            </ul>
+
+            <h3 class="subsection-title" id="bitcoin-state">2.2 作为状态转换系统的比特币</h3>
+            <p class="paragraph">
+                从技术角度看，比特币可以理解为一个状态转换系统。系统状态由所有已存在的未花费交易输出(UTXO)组成。
+            </p>
+            <div class="code-section">
+                <code>
+<span class="code-comment">// 状态转换函数</span>
+<span class="code-keyword">APPLY</span>(S, TX) → S'
+
+<span class="code-comment">// 其中：</span>
+<span class="code-comment">// S = 当前状态</span>
+<span class="code-comment">// TX = 交易</span>
+<span class="code-comment">// S' = 新状态</span>
+
+<span class="code-keyword">function</span> <span class="code-function">applyTransaction</span>(state, tx) {
+    <span class="code-comment">// 1. 验证输入签名</span>
+    <span class="code-keyword">for</span> (input <span class="code-keyword">in</span> tx.inputs) {
+        <span class="code-function">verifySignature</span>(input);
+    }
+    
+    <span class="code-comment">// 2. 检查输入是否未被花费</span>
+    <span class="code-keyword">for</span> (input <span class="code-keyword">in</span> tx.inputs) {
+        <span class="code-function">assert</span>(state.unspent[input]);
+    }
+    
+    <span class="code-comment">// 3. 更新状态</span>
+    <span class="code-keyword">return</span> <span class="code-function">newState</span>(state, tx);
+}
+                </code>
+            </div>
+
+            <h3 class="subsection-title" id="mining">2.3 挖矿</h3>
+            <p class="paragraph">
+                比特币使用<span class="highlight">工作量证明(PoW)</span>机制来达成共识。矿工通过解决数学难题来创建新区块，并获得比特币奖励。
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>挖矿参数</th>
+                        <th>说明</th>
+                        <th>当前值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>区块时间</td>
+                        <td>生成新区块的平均时间</td>
+                        <td>~10分钟</td>
+                    </tr>
+                    <tr>
+                        <td>区块奖励</td>
+                        <td>矿工获得的比特币数量</td>
+                        <td>6.25 BTC</td>
+                    </tr>
+                    <tr>
+                        <td>难度调整</td>
+                        <td>保持稳定出块时间的机制</td>
+                        <td>每2016块</td>
+                    </tr>
+                    <tr>
+                        <td>最大供应量</td>
+                        <td>比特币总量上限</td>
+                        <td>2100万</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title" id="merkle">2.4 默克尔树</h3>
+            <p class="paragraph">
+                <span class="highlight">默克尔树(Merkle Tree)</span>是一种二叉树数据结构，用于高效验证大量数据的完整性。
+            </p>
+            <div class="info-box">
+                <div class="info-box-title">🌳 默克尔树优势</div>
+                <div class="info-box-content">
+                    <ul class="list">
+                        <li>高效验证：只需 O(log n) 个哈希即可验证某个交易</li>
+                        <li>节省空间：轻节点只需存储区块头</li>
+                        <li>防篡改：任何数据修改都会导致根哈希变化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title" id="alt-blockchain">2.5 替代区块链应用</h3>
+            <p class="paragraph">
+                比特币的成功激发了众多替代区块链应用的出现：
+            </p>
+            <ul class="list">
+                <li><span class="emoji">📛</span><strong>Namecoin</strong> - 去中心化域名系统</li>
+                <li><span class="emoji">🎨</span><strong>Colored Coins</strong> - 在比特币上发行自定义资产</li>
+                <li><span class="emoji">📊</span><strong>Metacoins</strong> - 在比特币之上构建新协议</li>
+            </ul>
+
+            <h3 class="subsection-title" id="scripting">2.6 脚本</h3>
+            <p class="paragraph">
+                比特币的脚本语言存在以下限制：
+            </p>
+            <ul class="list">
+                <li>❌ 缺乏图灵完备性（无循环语句）</li>
+                <li>❌ 盲目性（无法访问区块链数据）</li>
+                <li>❌ 价值盲性（无法查询UTXO金额）</li>
+                <li>❌ 缺乏状态（无法保存内部状态）</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Ethereum -->
+        <section class="section" id="accounts">
+            <h2 class="section-header">3. 以太坊</h2>
+            
+            <h3 class="subsection-title" id="eth-accounts">3.1 以太坊账户</h3>
+            <p class="paragraph">
+                以太坊使用账户模型，而非比特币的UTXO模型。每个账户包含：
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>字段</th>
+                        <th>类型</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>nonce</td>
+                        <td>uint64</td>
+                        <td>交易计数器，防止重放攻击</td>
+                    </tr>
+                    <tr>
+                        <td>balance</td>
+                        <td>uint256</td>
+                        <td>账户余额（以Wei为单位）</td>
+                    </tr>
+                    <tr>
+                        <td>code</td>
+                        <td>bytes</td>
+                        <td>智能合约字节码</td>
+                    </tr>
+                    <tr>
+                        <td>storage</td>
+                        <td>mapping</td>
+                        <td>合约存储的键值对</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <div class="info-box-title">🔐 账户类型</div>
+                <div class="info-box-content">
+                    <strong>外部账户(EOA)</strong>：由私钥控制，无代码<br>
+                    <strong>合约账户(CA)</strong>：由代码控制，有存储
+                </div>
+            </div>
+
+            <h3 class="subsection-title" id="messages">3.2 消息和交易</h3>
+            <p class="paragraph">
+                以太坊中的交易包含以下字段：
+            </p>
+            <div class="code-section">
+                <code>
+<span class="code-keyword">struct</span> <span class="code-function">Transaction</span> {
+    address recipient;     <span class="code-comment">// 接收方地址</span>
+    uint256 value;         <span class="code-comment">// 转账金额（Wei）</span>
+    bytes data;            <span class="code-comment">// 附加数据</span>
+    uint256 gasLimit;      <span class="code-comment">// Gas限制</span>
+    uint256 gasPrice;      <span class="code-comment">// Gas价格</span>
+    uint64 nonce;          <span class="code-comment">// 交易序号</span>
+    bytes signature;       <span class="code-comment">// 数字签名</span>
+}
+                </code>
+            </div>
+
+            <h3 class="subsection-title" id="state-transition">3.3 以太坊状态转换函数</h3>
+            <p class="paragraph">
+                以太坊的状态转换函数执行智能合约代码：
+            </p>
+            <div class="code-section">
+                <code>
+<span class="code-keyword">function</span> <span class="code-function">applyTransaction</span>(state, tx) {
+    <span class="code-comment">// 1. 检查nonce和签名</span>
+    <span class="code-function">assert</span>(tx.nonce == state[sender].nonce);
+    <span class="code-function">verifySignature</span>(tx);
+    
+    <span class="code-comment">// 2. 扣除Gas费用</span>
+    gasFee = tx.gasLimit * tx.gasPrice;
+    state[sender].balance -= gasFee;
+    
+    <span class="code-comment">// 3. 执行转账</span>
+    state[sender].balance -= tx.value;
+    state[recipient].balance += tx.value;
+    
+    <span class="code-comment">// 4. 执行合约代码（如果有）</span>
+    <span class="code-keyword">if</span> (state[recipient].code.length > 0) {
+        <span class="code-function">executeCode</span>(state[recipient].code, tx.data);
+    }
+    
+    <span class="code-comment">// 5. 返回剩余Gas</span>
+    state[sender].balance += remainingGas * tx.gasPrice;
+    
+    <span class="code-keyword">return</span> state;
+}
+                </code>
+            </div>
+
+            <h3 class="subsection-title" id="code-execution">3.4 代码执行</h3>
+            <p class="paragraph">
+                以太坊使用<span class="highlight">以太坊虚拟机(EVM)</span>执行字节码。EVM是一个图灵完备的虚拟机，具有以下特点：
+            </p>
+            <ul class="list">
+                <li><span class="emoji">⚡</span>基于栈的架构</li>
+                <li><span class="emoji">💾</span>临时内存和持久化存储</li>
+                <li><span class="emoji">⛽</span>Gas机制防止无限循环</li>
+                <li><span class="emoji">🔒</span>沙盒环境隔离执行</li>
+            </ul>
+
+            <h3 class="subsection-title" id="blockchain-mining">3.5 区块链和挖矿</h3>
+            <p class="paragraph">
+                以太坊最初使用工作量证明，后转向权益证明。采用了基于<span class="highlight">GHOST协议</span>的共识机制，提高了网络安全性。
+            </p>
+        </section>
+
+        <!-- Section 4: Applications -->
+        <section class="section" id="tokens">
+            <h2 class="section-header">4. 应用</h2>
+            
+            <h3 class="subsection-title" id="token-systems">4.1 代币系统</h3>
+            <p class="paragraph">
+                以太坊允许发行<span class="highlight">自定义代币</span>，这是最广泛的应用之一。代币可以代表：
+            </p>
+            <ul class="list">
+                <li>💰 货币和积分</li>
+                <li>🎫 门票和凭证</li>
+                <li>📈 股权和证券</li>
+                <li>🎮 游戏道具</li>
+            </ul>
+
+            <div class="code-section">
+                <code>
+<span class="code-comment">// 简化的代币合约</span>
+<span class="code-keyword">contract</span> <span class="code-function">Token</span> {
+    mapping(address => uint) balances;
+    
+    <span class="code-keyword">function</span> <span class="code-function">transfer</span>(address to, uint amount) {
+        <span class="code-function">require</span>(balances[msg.sender] >= amount);
+        balances[msg.sender] -= amount;
+        balances[to] += amount;
+    }
+    
+    <span class="code-keyword">function</span> <span class="code-function">balanceOf</span>(address user) 
+        <span class="code-keyword">returns</span>(uint) {
+        <span class="code-keyword">return</span> balances[user];
+    }
+}
+                </code>
+            </div>
+
+            <h3 class="subsection-title" id="derivatives">4.2 金融衍生品</h3>
+            <p class="paragraph">
+                智能合约可以自动执行复杂的金融协议，包括：
+            </p>
+            <ul class="list">
+                <li>📊 期货合约</li>
+                <li>💱 期权交易</li>
+                <li>🔄 掉期协议</li>
+            </ul>
+
+            <h3 class="subsection-title" id="identity">4.3 身份和信誉系统</h3>
+            <p class="paragraph">
+                <span class="highlight">去中心化身份</span>系统让用户完全掌控自己的身份数据，无需依赖中心化服务提供商。
+            </p>
+
+            <h3 class="subsection-title" id="storage">4.4 去中心化文件存储</h3>
+            <p class="paragraph">
+                基于智能合约的存储系统，用户可以出租闲置存储空间，形成一个去中心化的云存储网络。
+            </p>
+
+            <h3 class="subsection-title" id="dao">4.5 去中心化自治组织</h3>
+            <p class="paragraph">
+                <span class="highlight">DAO</span>是由智能合约管理的组织，规则编码在区块链上，成员通过投票参与决策。
+            </p>
+            <div class="info-box">
+                <div class="info-box-title">🏛️ DAO特点</div>
+                <div class="info-box-content">
+                    <ul class="list">
+                        <li>透明的决策流程</li>
+                        <li>自动化执行规则</li>
+                        <li>无需信任的管理</li>
+                        <li>社区治理</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title" id="other-apps">4.6 其他应用</h3>
+            <p class="paragraph">
+                以太坊平台支持构建各种去中心化应用：
+            </p>
+            <ul class="list">
+                <li>👛 多签名钱包</li>
+                <li>☁️ 去中心化云计算</li>
+                <li>🎰 点对点赌博和预测市场</li>
+                <li>📜 版权和知识产权管理</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Conclusion -->
+        <section class="section" id="conclusion">
+            <h2 class="section-header">5. 结论</h2>
+            <p class="paragraph">
+                以太坊提供了一个<span class="highlight">通用的区块链平台</span>，为下一代去中心化应用奠定基础。通过引入图灵完备的智能合约，以太坊极大地扩展了区块链技术的应用范围。
+            </p>
+            <p class="paragraph">
+                作为一个开放的平台，以太坊将继续演进，支持更多创新应用的开发，推动去中心化技术的发展和普及。
+            </p>
+            <div class="info-box">
+                <div class="info-box-title">🚀 以太坊愿景</div>
+                <div class="info-box-content">
+                    "构建一个更加开放、公平、无需信任的去中心化世界计算机。"
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Toggle sidebar subsections
+        function toggleSubsection(element) {
+            const subsection = element.nextElementSibling;
+            const isExpanded = subsection.classList.contains('expanded');
+            
+            // Close all other subsections
+            document.querySelectorAll('.nav-subsection').forEach(s => {
+                s.classList.remove('expanded');
+            });
+            document.querySelectorAll('.nav-item.collapsible').forEach(i => {
+                i.classList.remove('expanded');
+            });
+            
+            // Toggle current subsection
+            if (!isExpanded) {
+                subsection.classList.add('expanded');
+                element.classList.add('expanded');
+            }
+        }
+
+        // Scroll spy
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        function updateActiveNav() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${current}`) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+
+        // Scroll progress
+        const scrollProgress = document.getElementById('scrollProgress');
+
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateScrollProgress);
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+
+        // Show search on ⌘K
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            
+            // Close search on Escape
+            if (e.key === 'Escape') {
+                searchInput.blur();
+                searchInput.value = '';
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (query.length > 0) {
+                sections.forEach(section => {
+                    const text = section.textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            } else {
+                sections.forEach(section => {
+                    section.style.display = 'block';
+                });
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize - expand first subsection
+        const firstCollapsible = document.querySelector('.nav-item.collapsible');
+        if (firstCollapsible) {
+            toggleSubsection(firstCollapsible);
+        }
+    </script>
+</body>
+</html>
